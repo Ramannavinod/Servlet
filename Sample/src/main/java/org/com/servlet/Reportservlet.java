@@ -1,7 +1,11 @@
 package org.com.servlet;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,26 +17,30 @@ import jakarta.servlet.http.HttpServletResponse;
 public class Reportservlet extends HttpServlet{
 	
 	@Override
-	public void doGet(HttpServletRequest req,HttpServletResponse res) throws IOException,ServletException {
+	public void doPost(HttpServletRequest req,HttpServletResponse res) throws IOException,ServletException {
 		res.setContentType("text/html");
-		
-//		PrintWriter out = res.getWriter();
-//		out.println("<h1>Welcome to Servlet World....</h1>");
-		
-		String path=req.getPathInfo();
-		
-		
-		if("/report".equals(path)) {
-			PrintWriter out = res.getWriter();
-//			out.println("<h1>Welcome to Report Servlet....</h1>");
-			res.getWriter().write("Welcome to Report Servlet....");
-		}
-		else if("/free".equals(path)) {
-			PrintWriter out = res.getWriter();
-			res.getWriter().write("Welcome to Free Servlet....");
-		}
-		
-		System.out.println("Reportservlet doGet method called");
-	}
+		PrintWriter writer=res.getWriter();
+		 Gson gson=new Gson();
+         BufferedReader reader = req.getReader();
+         StringBuilder json = new StringBuilder();
+         String line;
+         
+         while((line=reader.readLine())!=null) { //Read the request one by one like {,name,vinod,}
+        	 json.append(line);//add the value to the line object
+         }
+         
+         JsonObject obj=gson.fromJson(json.toString(), JsonObject.class);
+         
+         String name=obj.get("name").getAsString();
+         int age=obj.get("age").getAsInt();
+         
+         JsonObject response=new JsonObject();
+         response.addProperty("Name", name);
+         response.addProperty("Age", age);
+         
+         writer.print(response);
+         
+         
 
+}
 }
