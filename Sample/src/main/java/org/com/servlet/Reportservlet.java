@@ -34,11 +34,18 @@ public class Reportservlet extends HttpServlet{
          String name=obj.get("name").getAsString();
          int age=obj.get("age").getAsInt();
          
-         JsonObject response=new JsonObject();
-         response.addProperty("Name", name);
-         response.addProperty("Age", age);
+//         JsonObject response=new JsonObject();
+//         response.addProperty("Name", name);
+//         response.addProperty("Age", age);
          
-         writer.print(response);
+         String xml="<employee>"
+         		+ "<name>"+name+"</name>"
+         		+ "<age>"+age+"</age>"
+         		+ "</employee>";
+        		 
+        		 
+         
+         writer.print(xml);
          
          
 
